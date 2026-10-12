@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YouKiShorts</string>
+    <string name="title_activity_main">YouKiShorts</string>
+    <string name="package_name">com.youki.shorts</string>
+    <string name="custom_url_scheme">com.youki.shorts</string>
+</resources>
