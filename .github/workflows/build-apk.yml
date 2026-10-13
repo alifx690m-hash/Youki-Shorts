@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build:
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -26,10 +27,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - name: Verify Node and npm
+        run: |
+          node --version
+          npm --version
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Verify Capacitor
+        run: npx cap --version
 
       - name: Sync Capacitor Android
         run: npx cap sync android
@@ -39,7 +49,12 @@ jobs:
           echo "ANDROID_HOME=${ANDROID_HOME:-/usr/local/lib/android/sdk}" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}" >> "$GITHUB_ENV"
 
-      - name: Build APK
+      - name: Verify Android SDK
+        run: |
+          test -d "$ANDROID_HOME/platforms"
+          ls "$ANDROID_HOME/platforms"
+
+      - name: Build Debug APK
         working-directory: android
         run: |
           chmod +x gradlew
@@ -51,3 +66,4 @@ jobs:
           name: YouKiShorts-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          retention-days: 7
